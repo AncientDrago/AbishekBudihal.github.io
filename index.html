@@ -4,30 +4,248 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Abishek Budihal | Embedded Systems Engineer</title>
-  <meta name="description" content="Portfolio of Abishek Budihal – Embedded Systems Engineer focused on bare-metal firmware, MCU bring-up, and mixed-signal hardware validation." />
+  <meta name="description" content="Embedded systems portfolio of Abishek Budihal – bare-metal firmware, MCU bring-up, hardware debugging, and mixed-signal validation." />
 
   <style>
     :root {
-      --bg: #0f172a;
-      --card: #111827;
+      --bg1: #020617;
+      --bg2: #020024;
+      --accent: #22d3ee;
+      --card: rgba(17, 24, 39, 0.85);
       --text: #e5e7eb;
       --muted: #9ca3af;
-      --accent: #38bdf8;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(180deg, #020617, var(--bg));
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #0ea5e9 0%, transparent 40%),
+        radial-gradient(800px 500px at 90% 10%, #22c55e 0%, transparent 45%),
+        linear-gradient(180deg, var(--bg2), var(--bg1));
       color: var(--text);
       line-height: 1.6;
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 1050px;
       margin: auto;
-      padding: 3rem 1.25rem;
+      padding: 3.5rem 1.25rem;
     }
 
     header {
+      display: grid;
+      gap: 1.4rem;
+      margin-bottom: 4rem;
+    }
+
+    header h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    header p {
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .links a {
+      display: inline-block;
+      color: var(--accent);
+      margin-right: 1.4rem;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    section {
+      margin-bottom: 4rem;
+    }
+
+    h2 {
+      font-size: 1.7rem;
+      margin-bottom: 1.2rem;
+      border-left: 4px solid var(--accent);
+      padding-left: 0.75rem;
+    }
+
+    .card {
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border-radius: 18px;
+      padding: 1.6rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+      margin-bottom: 1.5rem;
+    }
+
+    .card h3 {
+      margin-bottom: 0.4rem;
+      font-size: 1.25rem;
+    }
+
+    .card h3 a {
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .card h3 a:hover {
+      color: var(--accent);
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 0.9rem;
+    }
+
+    ul {
+      margin-left: 1.2rem;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .skill {
+      background: rgba(2, 6, 23, 0.8);
+      border: 1px solid rgba(148,163,184,0.2);
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .step {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 1.3rem;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 4rem;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 640px) {
+      header h1 { font-size: 2.1rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- HEADER -->
+    <header>
+      <h1>Abishek Budihal</h1>
+      <p>
+        Embedded Systems Engineer focused on hands-on work — MCU bring-up, bare-metal
+        firmware, sensor integration, and board-level debugging. I enjoy working close
+        to hardware and validating systems with real measurements.
+      </p>
+      <div class="links">
+        <a href="https://github.com/AncientDrago" target="_blank">GitHub</a>
+        <a href="https://www.linkedin.com/in/abishek-budihal" target="_blank">LinkedIn</a>
+        <a href="Abishek_Budihal_Embedded.pdf" download>Resume</a>
+        <a href="mailto:abibudihal123@gmail.com">Email</a>
+      </div>
+    </header>
+
+    <!-- EXPERIENCE -->
+    <section>
+      <h2>Experience</h2>
+      <div class="card">
+        <h3>Naval Science and Technological Laboratory (DRDO)</h3>
+        <div class="meta">Embedded Systems Intern · Sept 2025 – Present</div>
+        <ul>
+          <li>Brought up ARM (STM32, MCB1700) and AVR (ATxmega128A1U) MCUs using bare-metal C.</li>
+          <li>Implemented interrupt-driven SPI, I²C, and UART drivers for deterministic data capture.</li>
+          <li>Debugged firmware–hardware interaction using oscilloscope, DMM, and register-level analysis.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section>
+      <h2>Projects</h2>
+
+      <div class="card">
+        <h3>
+          <a href="https://github.com/AncientDrago/PrecisionDAC-High-Performance-Data-to-Analog-Conversion-Platform-XMEGA-DAC81408" target="_blank">
+            PrecisionDAC – 16-bit Mixed-Signal Platform
+          </a>
+        </h3>
+        <div class="meta">ATxmega128A1U · DAC81408 · SPI · RS-232</div>
+        <ul>
+          <li>Built a complete MCU → DAC signal chain for precision 16-bit analog output generation.</li>
+          <li>Integrated level shifting, isolated ±12V / 5V power, and SPI timing control.</li>
+          <li>Measured and validated output accuracy with 0.037% full-scale error using lab instruments.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>
+          <a href="https://github.com/AncientDrago/Landmine-Detection-Vehicle" target="_blank">
+            Landmine Detection Vehicle
+          </a>
+        </h3>
+        <div class="meta">STM32 · Embedded C · Sensors · GPS</div>
+        <ul>
+          <li>Developed a real-time STM32-based robotic platform for terrain scanning.</li>
+          <li>Integrated and calibrated ultrasonic and inductive sensors under field conditions.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- DEBUGGING APPROACH -->
+    <section>
+      <h2>How I Debug Embedded Systems</h2>
+      <div class="workflow">
+        <div class="step">Start with power integrity, clock sources, and reset behavior.</div>
+        <div class="step">Bring up peripherals incrementally using register-level checks.</div>
+        <div class="step">Verify signals with oscilloscope / logic analyzer.</div>
+        <div class="step">Correlate firmware behavior with measured hardware outputs.</div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section>
+      <h2>Technical Skills</h2>
+      <div class="skills">
+        <span class="skill">Embedded C</span>
+        <span class="skill">C++</span>
+        <span class="skill">ARM Cortex-M</span>
+        <span class="skill">STM32</span>
+        <span class="skill">AVR</span>
+        <span class="skill">SPI / I²C / UART</span>
+        <span class="skill">Bare-metal Firmware</span>
+        <span class="skill">Mixed-signal Debugging</span>
+        <span class="skill">Oscilloscope & DMM</span>
+        <span class="skill">Git / GitHub</span>
+        <span class="skill">Linux</span>
+      </div>
+    </section>
+
+    <footer>
+      © 2026 Abishek Budihal · Embedded Systems Portfolio
+    </footer>
+
+  </div>
+</body>
+</html>
