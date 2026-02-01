@@ -176,10 +176,10 @@
   <header>
     <h1>Abishek Budihal</h1>
     <p>
-      I build and debug embedded systems — from bare‑metal firmware to real hardware.
-      My experience spans ARM and AVR microcontrollers, mixed‑signal boards, and
-      hands‑on validation using lab instruments. I enjoy working close to the silicon
-      and making systems behave reliably in the real world.
+      I build and debug embedded systems — from bare-metal firmware to RTL design
+      and verification. My experience spans microcontrollers, mixed-signal boards,
+      and SoC-level bus protocols, with a strong focus on Linux-based workflows and
+      waveform-driven debugging.
     </p>
     <div class="links">
       <a href="https://github.com/AncientDrago" target="_blank">GitHub</a>
@@ -193,9 +193,9 @@
     <h2>What I Work With</h2>
     <div class="card">
       <p>
-        Bare‑metal firmware • ARM Cortex‑M & AVR • SPI / I²C / UART •
-        Mixed‑signal systems • Power rails & signal integrity •
-        Oscilloscope‑driven debugging • Git & Linux
+        RTL & Verilog • AXI4-Lite • Embedded C • ARM Cortex-M & AVR •
+        SPI / I²C / UART • Mixed-signal systems •
+        Oscilloscope & waveform-driven debugging • Git & Linux
       </p>
     </div>
   </section>
@@ -205,18 +205,41 @@
     <div class="projects-grid">
 
       <div class="card">
-        <h3><a href="https://github.com/AncientDrago" target="_blank">PrecisionDAC</a></h3>
+        <h3>
+          <a href="https://github.com/AncientDrago/axi-lite-peripheral" target="_blank">
+            AXI Lite Peripheral Design & Verification
+          </a>
+        </h3>
         <p>
-          A 16‑bit mixed‑signal platform built around an external DAC and AVR MCU,
-          focused on clean analog outputs and measurement‑driven validation.
+          Designed and verified a custom AXI4-Lite slave in Verilog, implementing
+          register-based read/write transactions, address decoding, and protocol-
+          compliant handshaking. Verified functionality using a self-checking
+          testbench, Linux-based simulation flow, and GTKWave waveform analysis.
         </p>
       </div>
 
       <div class="card">
-        <h3><a href="https://github.com/AncientDrago" target="_blank">Landmine Detection Vehicle</a></h3>
+        <h3>
+          <a href="https://github.com/AncientDrago" target="_blank">
+            PrecisionDAC
+          </a>
+        </h3>
         <p>
-          STM32‑based robotic system integrating multiple sensors and real‑time
-          firmware for field‑oriented detection tasks.
+          A 16-bit mixed-signal platform built around an external DAC and AVR MCU,
+          focused on clean analog outputs, power integrity, and
+          measurement-driven validation.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>
+          <a href="https://github.com/AncientDrago" target="_blank">
+            Landmine Detection Vehicle
+          </a>
+        </h3>
+        <p>
+          STM32-based robotic system integrating multiple sensors and real-time
+          firmware, emphasizing interrupt-driven design and field-oriented testing.
         </p>
       </div>
 
@@ -226,16 +249,18 @@
   <section>
     <h2>Skills Snapshot</h2>
     <div class="skills">
+      <span class="skill">Verilog</span>
+      <span class="skill">AXI4-Lite</span>
+      <span class="skill">RTL Design</span>
+      <span class="skill">Verification</span>
       <span class="skill">Embedded C</span>
-      <span class="skill">ARM Cortex‑M</span>
+      <span class="skill">ARM Cortex-M</span>
       <span class="skill">STM32</span>
       <span class="skill">AVR</span>
-      <span class="skill">Bare‑metal</span>
       <span class="skill">SPI / I²C / UART</span>
-      <span class="skill">Mixed‑Signal</span>
-      <span class="skill">Oscilloscope</span>
-      <span class="skill">Git</span>
       <span class="skill">Linux</span>
+      <span class="skill">Git</span>
+      <span class="skill">GTKWave</span>
     </div>
   </section>
 
