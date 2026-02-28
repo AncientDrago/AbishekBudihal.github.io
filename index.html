@@ -4,271 +4,1101 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Abishek Budihal | Embedded Systems</title>
-  <meta name="description" content="Abishek Budihal – Embedded Systems Engineer portfolio" />
+  <meta name="description" content="Abishek Budihal – Embedded Systems Engineer" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg1: #020617;
-      --bg2: #020024;
-      --card: rgba(17, 25, 40, 0.75);
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --accent: #38bdf8;
-      --glow: rgba(56, 189, 248, 0.35);
+      --bg: #00050f;
+      --panel: rgba(0, 255, 140, 0.04);
+      --border: rgba(0, 255, 140, 0.18);
+      --green: #00ff8c;
+      --green-dim: rgba(0, 255, 140, 0.5);
+      --green-glow: rgba(0, 255, 140, 0.15);
+      --amber: #ffb800;
+      --amber-dim: rgba(255, 184, 0, 0.6);
+      --red: #ff4060;
+      --text: #c8ffd4;
+      --muted: #4a7a5a;
+      --font-mono: 'Share Tech Mono', monospace;
+      --font-display: 'Orbitron', monospace;
+      --font-body: 'Rajdhani', sans-serif;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: Inter, system-ui, sans-serif;
-      background: radial-gradient(circle at top, #020024, var(--bg1));
+      font-family: var(--font-body);
+      background: var(--bg);
       color: var(--text);
-      line-height: 1.6;
       overflow-x: hidden;
+      cursor: none;
     }
 
+    /* ── Custom Cursor ── */
+    #cursor {
+      position: fixed;
+      width: 20px; height: 20px;
+      border: 1.5px solid var(--green);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, background 0.2s;
+      mix-blend-mode: screen;
+    }
+    #cursor-dot {
+      position: fixed;
+      width: 4px; height: 4px;
+      background: var(--green);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+    }
+    body:has(a:hover) #cursor,
+    body:has(button:hover) #cursor {
+      width: 40px; height: 40px;
+      background: rgba(0,255,140,0.08);
+    }
+
+    /* ── Canvas BG ── */
+    #bg-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── Scanlines overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.15) 2px,
+        rgba(0, 0, 0, 0.15) 4px
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── Vignette ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.7) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── Layout ── */
     .container {
-      max-width: 1000px;
+      position: relative;
+      z-index: 2;
+      max-width: 1100px;
       margin: auto;
-      padding: 4rem 1.5rem;
+      padding: 0 2rem;
     }
 
-    header {
-      min-height: 90vh;
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 3rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,5,15,0.85);
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      color: var(--green);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav-links a::before { content: '> '; color: var(--green); opacity: 0; transition: opacity 0.3s; }
+    .nav-links a:hover { color: var(--green); }
+    .nav-links a:hover::before { opacity: 1; }
+
+    .status-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: blink 2s infinite;
+      margin-right: 0.5rem;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    /* ── Hero ── */
+    #hero {
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: 1.5rem;
-      animation: fadeIn 1.2s ease;
-    }
-
-    h1 {
-      font-size: 3rem;
-      font-weight: 800;
-      background: linear-gradient(90deg, #38bdf8, #22d3ee);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    header p {
-      max-width: 700px;
-      color: var(--muted);
-      font-size: 1.05rem;
-    }
-
-    .links a {
-      display: inline-block;
-      margin-right: 1.2rem;
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 500;
+      padding-top: 80px;
       position: relative;
     }
 
-    .links a::after {
-      content: "";
-      position: absolute;
-      width: 0;
-      height: 2px;
-      bottom: -4px;
-      left: 0;
-      background: var(--accent);
-      transition: width 0.3s ease;
+    .hero-inner {
+      padding: 5rem 2rem;
+      max-width: 1100px;
+      margin: auto;
     }
 
-    .links a:hover::after {
+    .hero-tag {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      margin-bottom: 1.5rem;
+      animation: slideUp 1s ease both;
+    }
+
+    .hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 8vw, 7rem);
+      font-weight: 900;
+      line-height: 0.95;
+      color: var(--green);
+      text-shadow: 0 0 40px rgba(0,255,140,0.4), 0 0 80px rgba(0,255,140,0.15);
+      animation: glitchIn 1.2s ease both 0.2s;
+      position: relative;
+    }
+
+    .hero-name::before,
+    .hero-name::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0; left: 0;
       width: 100%;
     }
 
+    .hero-name::before {
+      color: var(--red);
+      animation: glitch1 4s infinite 2s;
+      clip-path: polygon(0 20%, 100% 20%, 100% 35%, 0 35%);
+    }
+
+    .hero-name::after {
+      color: #00cfff;
+      animation: glitch2 4s infinite 2.3s;
+      clip-path: polygon(0 65%, 100% 65%, 100% 80%, 0 80%);
+    }
+
+    @keyframes glitch1 {
+      0%, 95%, 100% { transform: translate(0); opacity: 0; }
+      96% { transform: translate(-3px, 1px); opacity: 0.8; }
+      97% { transform: translate(3px, -1px); opacity: 0.6; }
+      98% { transform: translate(0); opacity: 0; }
+    }
+
+    @keyframes glitch2 {
+      0%, 95%, 100% { transform: translate(0); opacity: 0; }
+      96% { transform: translate(3px, 2px); opacity: 0.8; }
+      97% { transform: translate(-3px, -2px); opacity: 0.6; }
+      98% { transform: translate(0); opacity: 0; }
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-mono);
+      font-size: clamp(0.8rem, 2vw, 1.1rem);
+      color: var(--amber);
+      margin-top: 1.2rem;
+      animation: slideUp 1s ease both 0.6s;
+      letter-spacing: 0.05em;
+    }
+
+    .hero-desc {
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: rgba(200, 255, 212, 0.6);
+      max-width: 600px;
+      margin-top: 1.5rem;
+      line-height: 1.8;
+      animation: slideUp 1s ease both 0.9s;
+    }
+
+    .hero-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+      animation: slideUp 1s ease both 1.2s;
+    }
+
+    .btn {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 2px;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: #00050f;
+      font-weight: 700;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: white;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+
+    .btn-primary:hover::before { transform: scaleX(1); }
+    .btn-primary:hover { color: #00050f; }
+
+    .btn-outline {
+      border: 1px solid var(--border);
+      color: var(--green);
+      background: transparent;
+    }
+
+    .btn-outline:hover {
+      background: var(--green-glow);
+      border-color: var(--green);
+      box-shadow: 0 0 20px rgba(0,255,140,0.2);
+    }
+
+    /* ── Sections ── */
     section {
-      margin-top: 5rem;
+      padding: 7rem 2rem;
+      max-width: 1100px;
+      margin: auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .section-num {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--green);
+      opacity: 0.5;
     }
 
     h2 {
-      font-size: 1.6rem;
-      margin-bottom: 1.2rem;
-      position: relative;
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
     }
 
-    h2::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: -6px;
-      width: 60px;
-      height: 3px;
-      background: var(--accent);
-      box-shadow: 0 0 12px var(--glow);
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      max-width: 300px;
     }
 
+    /* ── Cards ── */
     .card {
-      background: var(--card);
-      backdrop-filter: blur(12px);
-      border-radius: 18px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 2px;
       padding: 1.8rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      position: relative;
+      transition: all 0.4s;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 0;
+      background: var(--green);
+      transition: height 0.4s ease;
     }
 
     .card:hover {
-      transform: translateY(-6px) scale(1.01);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+      border-color: var(--green-dim);
+      background: rgba(0, 255, 140, 0.06);
+      box-shadow: 0 0 40px rgba(0,255,140,0.08), inset 0 0 40px rgba(0,255,140,0.03);
+      transform: translateY(-4px);
     }
 
-    .projects-grid {
+    .card:hover::before { height: 100%; }
+
+    /* corner decoration */
+    .card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 20px; height: 20px;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+    }
+
+    /* ── About ── */
+    .about-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: 1fr 1fr;
       gap: 1.5rem;
     }
 
-    .card h3 {
-      margin-bottom: 0.5rem;
-    }
+    @media (max-width: 640px) { .about-grid { grid-template-columns: 1fr; } }
 
-    .card p {
-      color: var(--muted);
+    .about-card p {
       font-size: 0.95rem;
+      line-height: 1.8;
+      color: rgba(200,255,212,0.6);
+      font-weight: 300;
     }
 
-    .card a {
-      color: var(--accent);
+    .about-card h3 {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--amber);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── Terminal ── */
+    .terminal {
+      background: #000d08;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--green);
+      position: relative;
+    }
+
+    .terminal-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 1rem;
+    }
+
+    .t-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .t-red { background: #ff5f57; }
+    .t-yellow { background: #febc2e; }
+    .t-green { background: #28c840; }
+
+    .terminal-line { margin-bottom: 0.3rem; }
+    .t-prompt { color: var(--muted); }
+    .t-cmd { color: var(--green); }
+    .t-out { color: rgba(0,255,140,0.5); }
+    .t-amber { color: var(--amber); }
+
+    .cursor-blink {
+      display: inline-block;
+      width: 8px; height: 14px;
+      background: var(--green);
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+    }
+
+    /* ── Projects ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .proj-card h3 {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      color: var(--text);
+      margin-bottom: 0.8rem;
+    }
+
+    .proj-card a {
       text-decoration: none;
-      font-weight: 500;
     }
 
-    .skills {
+    .proj-card p {
+      font-size: 0.88rem;
+      line-height: 1.8;
+      color: rgba(200,255,212,0.5);
+      font-weight: 300;
+    }
+
+    .proj-tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.6rem;
+      gap: 0.4rem;
+      margin-top: 1rem;
     }
 
-    .skill {
-      padding: 0.45rem 0.8rem;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      background: rgba(56,189,248,0.08);
-      border: 1px solid rgba(56,189,248,0.25);
-      color: var(--accent);
+    .proj-tag {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--green);
+      background: rgba(0,255,140,0.06);
+      border: 1px solid rgba(0,255,140,0.15);
+      padding: 0.2rem 0.5rem;
+      letter-spacing: 0.1em;
     }
 
+    .proj-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--green);
+      text-decoration: none;
+      margin-top: 1.2rem;
+      letter-spacing: 0.1em;
+      transition: gap 0.3s;
+    }
+
+    .proj-link:hover { gap: 0.8rem; }
+    .proj-link::after { content: '→'; }
+
+    /* ── Skills ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .skill-group h3 {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--amber);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .skill-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .skill-name {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text);
+      min-width: 120px;
+    }
+
+    .skill-bar-track {
+      flex: 1;
+      height: 3px;
+      background: rgba(0,255,140,0.1);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .skill-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), #00cfff);
+      border-radius: 99px;
+      width: 0%;
+      transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 0 8px rgba(0,255,140,0.6);
+    }
+
+    /* ── Contact ── */
+    .contact-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media (max-width: 640px) { .contact-wrap { grid-template-columns: 1fr; } }
+
+    .contact-links a {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      text-decoration: none;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      margin-bottom: 0.8rem;
+      transition: all 0.3s;
+      letter-spacing: 0.05em;
+    }
+
+    .contact-links a:hover {
+      border-color: var(--green);
+      color: var(--green);
+      background: rgba(0,255,140,0.05);
+      padding-left: 1.4rem;
+    }
+
+    .contact-links .link-icon {
+      color: var(--green);
+      opacity: 0.6;
+      font-size: 1rem;
+    }
+
+    /* ── Footer ── */
     footer {
+      position: relative;
+      z-index: 2;
       text-align: center;
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
       color: var(--muted);
-      margin-top: 6rem;
-      font-size: 0.85rem;
+      letter-spacing: 0.15em;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
+    /* ── Animations ── */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-width: 640px) {
-      h1 { font-size: 2.2rem; }
+    @keyframes glitchIn {
+      0% { opacity: 0; transform: skewX(-10deg) scale(0.98); filter: blur(8px); }
+      30% { opacity: 1; filter: blur(0); }
+      35% { transform: skewX(3deg); }
+      40% { transform: skewX(-2deg); }
+      45% { transform: skewX(0); }
+      100% { transform: none; }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── Hex grid decoration ── */
+    .hex-deco {
+      position: absolute;
+      right: -60px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.04;
+      pointer-events: none;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--green);
+      line-height: 1.4;
+      letter-spacing: 0.1em;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(0,255,140,0.3); border-radius: 99px; }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      section { padding: 4rem 1.5rem; }
     }
   </style>
 </head>
 <body>
 
-<div class="container">
+<!-- Custom Cursor -->
+<div id="cursor"></div>
+<div id="cursor-dot"></div>
 
-  <header>
-    <h1>Abishek Budihal</h1>
-    <p>
-      I build and debug embedded systems — from bare-metal firmware to RTL design
-      and verification. My experience spans microcontrollers, mixed-signal boards,
-      and SoC-level bus protocols, with a strong focus on Linux-based workflows and
-      waveform-driven debugging.
+<!-- Background Canvas (particle field + circuit lines) -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo"><span class="status-dot"></span>AB_SYS v2.6.0</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<div id="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">// embedded_systems_engineer.exe</div>
+    <h1 class="hero-name" data-text="ABISHEK BUDIHAL">ABISHEK<br>BUDIHAL</h1>
+    <p class="hero-subtitle">[ FIRMWARE · RTL · SILICON · PROTOCOL ]</p>
+    <p class="hero-desc">
+      I write the code that talks to metal — bare-metal firmware, RTL design,
+      mixed-signal boards. If it has registers and a datasheet, I'm at home.
     </p>
-    <div class="links">
-      <a href="https://github.com/AncientDrago" target="_blank">GitHub</a>
-      <a href="https://www.linkedin.com/in/abishek-budihal" target="_blank">LinkedIn</a>
-      <a href="mailto:abibudihal123@gmail.com">Email</a>
-      <a href="Abishek_Budihal_Embedded.pdf" target="_blank">Resume</a>
+    <div class="hero-links">
+      <a href="https://drive.google.com/file/d/1o9EiS4o4TNy-P6hhrHGYczbLL5sTrw7h/view?usp=sharing" class="btn btn-primary" target="_blank">
+        <span style="position:relative;z-index:1">DOWNLOAD RESUME</span>
+      </a>
+      <a href="#projects" class="btn btn-outline">VIEW WORK</a>
+      <a href="/cdn-cgi/l/email-protection#2b4a4942495e4f42434a471a19186b4c464a424705484446" class="btn btn-outline">PING ME</a>
     </div>
-  </header>
-
-  <section>
-    <h2>What I Work With</h2>
-    <div class="card">
-      <p>
-        RTL & Verilog • AXI4-Lite • Embedded C • ARM Cortex-M & AVR •
-        SPI / I²C / UART • Mixed-signal systems •
-        Oscilloscope & waveform-driven debugging • Git & Linux
-      </p>
-    </div>
-  </section>
-
-  <section>
-    <h2>Projects</h2>
-    <div class="projects-grid">
-
-      <div class="card">
-        <h3>
-          <a href="https://github.com/AncientDrago/axi-lite-peripheral" target="_blank">
-            AXI Lite Peripheral Design & Verification
-          </a>
-        </h3>
-        <p>
-          Designed and verified a custom AXI4-Lite slave in Verilog, implementing
-          register-based read/write transactions, address decoding, and protocol-
-          compliant handshaking. Verified functionality using a self-checking
-          testbench, Linux-based simulation flow, and GTKWave waveform analysis.
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>
-          <a href="https://github.com/AncientDrago" target="_blank">
-            PrecisionDAC
-          </a>
-        </h3>
-        <p>
-          A 16-bit mixed-signal platform built around an external DAC and AVR MCU,
-          focused on clean analog outputs, power integrity, and
-          measurement-driven validation.
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>
-          <a href="https://github.com/AncientDrago" target="_blank">
-            Landmine Detection Vehicle
-          </a>
-        </h3>
-        <p>
-          STM32-based robotic system integrating multiple sensors and real-time
-          firmware, emphasizing interrupt-driven design and field-oriented testing.
-        </p>
-      </div>
-
-    </div>
-  </section>
-
-  <section>
-    <h2>Skills Snapshot</h2>
-    <div class="skills">
-      <span class="skill">Verilog</span>
-      <span class="skill">AXI4-Lite</span>
-      <span class="skill">RTL Design</span>
-      <span class="skill">Verification</span>
-      <span class="skill">Embedded C</span>
-      <span class="skill">ARM Cortex-M</span>
-      <span class="skill">STM32</span>
-      <span class="skill">AVR</span>
-      <span class="skill">SPI / I²C / UART</span>
-      <span class="skill">Linux</span>
-      <span class="skill">Git</span>
-      <span class="skill">GTKWave</span>
-    </div>
-  </section>
-
-  <footer>
-    © 2026 Abishek Budihal · Built with HTML & CSS · Hosted on GitHub Pages
-  </footer>
-
+  </div>
 </div>
 
-</body>
-</html>
+<!-- About -->
+<section id="about">
+  <div class="section-header reveal">
+    <span class="section-num">01 //</span>
+    <h2>SYSTEM INFO</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="about-grid">
+    <div class="card about-card reveal">
+      <h3>:: WHO_AM_I</h3>
+      <p>
+        Embedded engineer who lives in datasheets and oscilloscope traces. I've
+        designed custom AXI4-Lite peripherals from scratch, built interrupt-driven
+        robotics, and tuned analog front-ends with a probe and patience.
+      </p>
+    </div>
+
+    <div class="card about-card reveal" style="transition-delay: 0.15s">
+      <h3>:: METHODOLOGY</h3>
+      <p>
+        I approach hardware with a test-first mindset — write the self-checking
+        testbench before the RTL, verify waveforms before soldering. Waveform-
+        driven debugging isn't a last resort, it's step one.
+      </p>
+    </div>
+
+    <div class="terminal reveal" style="grid-column: 1 / -1; transition-delay: 0.3s">
+      <div class="terminal-bar">
+        <div class="t-dot t-red"></div>
+        <div class="t-dot t-yellow"></div>
+        <div class="t-dot t-green"></div>
+      </div>
+      <div class="terminal-line"><span class="t-prompt">abishek@lab:~$</span> <span class="t-cmd">uname -a</span></div>
+      <div class="terminal-line t-out">Embedded Linux · ARM Cortex-M · AVR · STM32</div>
+      <div class="terminal-line"><span class="t-prompt">abishek@lab:~$</span> <span class="t-cmd">cat /proc/stack</span></div>
+      <div class="terminal-line t-out">Verilog → Simulation → GTKWave → Silicon</div>
+      <div class="terminal-line"><span class="t-prompt">abishek@lab:~$</span> <span class="t-cmd">ping interests</span></div>
+      <div class="terminal-line"><span class="t-amber">64 bytes from SoC: protocol=AXI4-Lite, TTL=∞</span></div>
+      <div class="terminal-line"><span class="t-amber">64 bytes from DAC: protocol=SPI, ENOB=16</span></div>
+      <div class="terminal-line"><span class="t-amber">64 bytes from ROBOT: protocol=UART, mode=interrupt</span></div>
+      <div class="terminal-line" style="margin-top: 0.3rem"><span class="t-prompt">abishek@lab:~$</span> <span class="cursor-blink"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="projects">
+  <div class="section-header reveal">
+    <span class="section-num">02 //</span>
+    <h2>LOADED MODULES</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="projects-grid">
+
+    <div class="card proj-card reveal">
+      <h3>AXI4-LITE PERIPHERAL DESIGN & VERIFICATION</h3>
+      <p>
+        Custom AXI4-Lite slave in Verilog with register-mapped read/write,
+        address decoding, and protocol-compliant handshaking. Verified
+        via a self-checking testbench with GTKWave waveform analysis on Linux.
+      </p>
+      <div class="proj-tags">
+        <span class="proj-tag">Verilog</span>
+        <span class="proj-tag">AXI4-Lite</span>
+        <span class="proj-tag">RTL</span>
+        <span class="proj-tag">GTKWave</span>
+        <span class="proj-tag">Linux</span>
+      </div>
+      <a href="https://github.com/AncientDrago/axi-lite-peripheral" class="proj-link" target="_blank">VIEW ON GITHUB</a>
+    </div>
+
+    <div class="card proj-card reveal" style="transition-delay: 0.15s">
+      <h3>PRECISIONDAC — 16-BIT MIXED-SIGNAL PLATFORM</h3>
+      <p>
+        16-bit mixed-signal board built around an external DAC and AVR MCU.
+        Focused on clean analog outputs, power integrity, and
+        measurement-driven output validation. Scope-first development.
+      </p>
+      <div class="proj-tags">
+        <span class="proj-tag">AVR</span>
+        <span class="proj-tag">SPI</span>
+        <span class="proj-tag">Mixed-Signal</span>
+        <span class="proj-tag">PCB</span>
+        <span class="proj-tag">Analog</span>
+      </div>
+      <a href="https://github.com/AncientDrago" class="proj-link" target="_blank">VIEW ON GITHUB</a>
+    </div>
+
+    <div class="card proj-card reveal" style="transition-delay: 0.3s">
+      <h3>LANDMINE DETECTION VEHICLE</h3>
+      <p>
+        STM32-based autonomous robotic system with multi-sensor fusion and
+        real-time interrupt-driven firmware. Built for field-reliability with
+        hardware debouncing and sensor-agnostic abstraction layers.
+      </p>
+      <div class="proj-tags">
+        <span class="proj-tag">STM32</span>
+        <span class="proj-tag">Embedded C</span>
+        <span class="proj-tag">UART</span>
+        <span class="proj-tag">I²C</span>
+        <span class="proj-tag">RTOS concepts</span>
+      </div>
+      <a href="https://github.com/AncientDrago" class="proj-link" target="_blank">VIEW ON GITHUB</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- Skills -->
+<section id="skills">
+  <div class="section-header reveal">
+    <span class="section-num">03 //</span>
+    <h2>CAPABILITY MAP</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="skills-grid">
+
+    <div class="card skill-group reveal">
+      <h3>:: HDL & DIGITAL</h3>
+      <div class="skill-item"><span class="skill-name">Verilog / RTL</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="88"></div></div></div>
+      <div class="skill-item"><span class="skill-name">AXI4-Lite</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="82"></div></div></div>
+      <div class="skill-item"><span class="skill-name">GTKWave</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="80"></div></div></div>
+      <div class="skill-item"><span class="skill-name">Testbench / Sim</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="78"></div></div></div>
+    </div>
+
+    <div class="card skill-group reveal" style="transition-delay: 0.15s">
+      <h3>:: FIRMWARE</h3>
+      <div class="skill-item"><span class="skill-name">Embedded C</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="92"></div></div></div>
+      <div class="skill-item"><span class="skill-name">ARM Cortex-M</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="85"></div></div></div>
+      <div class="skill-item"><span class="skill-name">STM32 / AVR</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="88"></div></div></div>
+      <div class="skill-item"><span class="skill-name">Interrupt Design</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="84"></div></div></div>
+    </div>
+
+    <div class="card skill-group reveal" style="transition-delay: 0.3s">
+      <h3>:: PROTOCOLS & BUS</h3>
+      <div class="skill-item"><span class="skill-name">SPI</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="90"></div></div></div>
+      <div class="skill-item"><span class="skill-name">I²C</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="88"></div></div></div>
+      <div class="skill-item"><span class="skill-name">UART</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="92"></div></div></div>
+      <div class="skill-item"><span class="skill-name">Mixed-Signal</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="76"></div></div></div>
+    </div>
+
+    <div class="card skill-group reveal" style="transition-delay: 0.45s">
+      <h3>:: TOOLS & ENV</h3>
+      <div class="skill-item"><span class="skill-name">Linux</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="88"></div></div></div>
+      <div class="skill-item"><span class="skill-name">Git</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="85"></div></div></div>
+      <div class="skill-item"><span class="skill-name">Oscilloscope</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="82"></div></div></div>
+      <div class="skill-item"><span class="skill-name">Waveform Debug</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="86"></div></div></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="section-header reveal">
+    <span class="section-num">04 //</span>
+    <h2>OPEN CHANNEL</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="contact-wrap">
+    <div class="card reveal">
+      <h3 style="font-family:var(--font-mono);font-size:0.72rem;color:var(--amber);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1rem">::  HANDSHAKE REQUEST</h3>
+      <p style="font-size:0.95rem;line-height:1.8;color:rgba(200,255,212,0.6);font-weight:300;">
+        Open to firmware, RTL, and embedded systems roles. Whether it's a full-time
+        position or a contract that needs someone who reads datasheets for fun —
+        I'm listening. Response latency: &lt; 24h.
+      </p>
+    </div>
+
+    <div class="contact-links reveal" style="transition-delay:0.2s">
+      <a href="/cdn-cgi/l/email-protection#f697949f9483929f9e979ac7c4c5b6919b979f9ad895999b" target="_blank">
+        <span class="link-icon">@</span> <span class="__cf_email__" data-cfemail="610003080314050809000d50535221060c00080d4f020e0c">[email&#160;protected]</span>
+      </a>
+      <a href="https://www.linkedin.com/in/abishek-budihal" target="_blank">
+        <span class="link-icon">in</span> /in/abishek-budihal
+      </a>
+      <a href="https://github.com/AncientDrago" target="_blank">
+        <span class="link-icon">{}</span> github.com/AncientDrago
+      </a>
+      <a href="https://drive.google.com/file/d/1o9EiS4o4TNy-P6hhrHGYczbLL5sTrw7h/view?usp=sharing" target="_blank">
+        <span class="link-icon">↓</span> Resume PDF
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 ABISHEK BUDIHAL &nbsp;·&nbsp; BUILT WITH HTML + CSS + CANVAS &nbsp;·&nbsp; HOSTED ON GITHUB PAGES</p>
+  <p style="margin-top:0.4rem;font-size:0.6rem;opacity:0.4">// ALL SIGNALS NOMINAL — NO RTOS REQUIRED</p>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ═══════════════════════════════════════════
+   Custom Cursor
+═══════════════════════════════════════════ */
+const cursor = document.getElementById('cursor');
+const cursorDot = document.getElementById('cursor-dot');
+let mx = 0, my = 0, cx = 0, cy = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursorDot.style.left = mx + 'px';
+  cursorDot.style.top = my + 'px';
+});
+
+function animateCursor() {
+  cx += (mx - cx) * 0.12;
+  cy += (my - cy) * 0.12;
+  cursor.style.left = cx + 'px';
+  cursor.style.top = cy + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+/* ═══════════════════════════════════════════
+   Background Canvas — Particle Field + Circuit Traces
+═══════════════════════════════════════════ */
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', () => { resize(); initParticles(); });
+
+// Particles
+const PARTICLE_COUNT = 120;
+let particles = [];
+let mouse = { x: -1000, y: -1000 };
+
+document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vx = (Math.random() - 0.5) * 0.4;
+    this.vy = (Math.random() - 0.5) * 0.4;
+    this.r = Math.random() * 1.5 + 0.5;
+    this.alpha = Math.random() * 0.5 + 0.1;
+    this.type = Math.random() > 0.85 ? 'bright' : 'normal';
+  }
+  update() {
+    // Mouse repulsion
+    const dx = this.x - mouse.x;
+    const dy = this.y - mouse.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 120) {
+      this.vx += dx / dist * 0.5;
+      this.vy += dy / dist * 0.5;
+    }
+    this.vx *= 0.98;
+    this.vy *= 0.98;
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+    if (this.type === 'bright') {
+      ctx.fillStyle = `rgba(0,255,140,${this.alpha + 0.3})`;
+      ctx.shadowColor = 'rgba(0,255,140,0.8)';
+      ctx.shadowBlur = 6;
+    } else {
+      ctx.fillStyle = `rgba(0,255,140,${this.alpha})`;
+      ctx.shadowBlur = 0;
+    }
+    ctx.fill();
+  }
+}
+
+// Circuit trace segments
+class CircuitTrace {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.length = Math.random() * 80 + 30;
+    this.dir = Math.floor(Math.random() * 4) * 90; // 0,90,180,270
+    this.alpha = Math.random() * 0.15 + 0.03;
+    this.progress = 0;
+    this.speed = Math.random() * 0.008 + 0.003;
+    this.pulse = Math.random() * 0.015 + 0.005;
+    this.pulsePos = 0;
+  }
+  update() {
+    this.progress = Math.min(this.progress + this.speed, 1);
+    this.pulsePos += this.pulse;
+    if (this.pulsePos > 1.4) this.reset();
+  }
+  draw() {
+    const rad = (this.dir * Math.PI) / 180;
+    const ex = this.x + Math.cos(rad) * this.length * this.progress;
+    const ey = this.y + Math.sin(rad) * this.length * this.progress;
+
+    ctx.strokeStyle = `rgba(0,255,140,${this.alpha})`;
+    ctx.lineWidth = 1;
+    ctx.shadowBlur = 0;
+    ctx.beginPath();
+    ctx.moveTo(this.x, this.y);
+    ctx.lineTo(ex, ey);
+    ctx.stroke();
+
+    // Moving pulse dot along the trace
+    if (this.progress > 0.1) {
+      const px = this.x + Math.cos(rad) * this.length * Math.min(this.pulsePos, this.progress);
+      const py = this.y + Math.sin(rad) * this.length * Math.min(this.pulsePos, this.progress);
+      ctx.beginPath();
+      ctx.arc(px, py, 2, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(0,255,140,0.9)`;
+      ctx.shadowColor = 'rgba(0,255,140,1)';
+      ctx.shadowBlur = 8;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  }
+}
+
+let traces = [];
+
+function initParticles() {
+  particles = Array.from({length: PARTICLE_COUNT}, () => new Particle());
+  traces = Array.from({length: 40}, () => {
+    const t = new CircuitTrace();
+    t.progress = Math.random(); // stagger
+    t.pulsePos = Math.random();
+    return t;
+  });
+}
+initParticles();
+
+function drawConnections() {
+  const maxDist = 130;
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < maxDist) {
+        const alpha = (1 - dist/maxDist) * 0.12;
+        ctx.strokeStyle = `rgba(0,255,140,${alpha})`;
+        ctx.lineWidth = 0.5;
+        ctx.shadowBlur = 0;
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+let frame = 0;
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Very subtle grid
+  ctx.strokeStyle = 'rgba(0,255,140,0.03)';
+  ctx.lineWidth = 1;
+  const gridSize = 60;
+  for (let x = 0; x < canvas.width; x += gridSize) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+  }
+  for (let y = 0; y < canvas.height; y += gridSize) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+  }
+
+  // Circuit traces
+  traces.forEach(t => { t.update(); t.draw(); });
+
+  // Connections
+  drawConnections();
+
+  // Particles
+  particles.forEach(p => { p.update(); p.draw(); });
+
+  frame++;
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* ═══════════════════════════════════════════
+   Intersection Observer — reveal on scroll
+═══════════════════════════════════════════ */
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      // Trigger skill bars
+      e.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.w + '%';
+      });
+    }
+  });
+}, { th
