@@ -692,7 +692,7 @@
         <span style="position:relative;z-index:1">DOWNLOAD RESUME</span>
       </a>
       <a href="#projects" class="btn btn-outline">VIEW WORK</a>
-      <a href="/cdn-cgi/l/email-protection#2b4a4942495e4f42434a471a19186b4c464a424705484446" class="btn btn-outline">PING ME</a>
+      <a href="mailto:abibudihal123@gmail.com" class="btn btn-outline">PING ME</a>
     </div>
   </div>
 </div>
@@ -747,7 +747,7 @@
 <section id="projects">
   <div class="section-header reveal">
     <span class="section-num">02 //</span>
-    <h2>MY WORKS</h2>
+    <h2>LOADED MODULES</h2>
     <div class="section-line"></div>
   </div>
 
@@ -871,8 +871,8 @@
     </div>
 
     <div class="contact-links reveal" style="transition-delay:0.2s">
-      <a href="/cdn-cgi/l/email-protection#f697949f9483929f9e979ac7c4c5b6919b979f9ad895999b" target="_blank">
-        <span class="link-icon">@</span> <span class="__cf_email__" data-cfemail="610003080314050809000d50535221060c00080d4f020e0c">[email&#160;protected]</span>
+      <a href="mailto:abibudihal123@gmail.com" target="_blank">
+        <span class="link-icon">@</span> abibudihal123@gmail.com
       </a>
       <a href="https://www.linkedin.com/in/abishek-budihal" target="_blank">
         <span class="link-icon">in</span> /in/abishek-budihal
@@ -880,7 +880,7 @@
       <a href="https://github.com/AncientDrago" target="_blank">
         <span class="link-icon">{}</span> github.com/AncientDrago
       </a>
-      <a href="https://drive.google.com/file/d/1o9EiS4o4TNy-P6hhrHGYczbLL5sTrw7h/view?usp=sharing" target="_blank">
+      <a href="Abishek_Budihal_Embedded.pdf" target="_blank">
         <span class="link-icon">↓</span> Resume PDF
       </a>
     </div>
@@ -892,7 +892,7 @@
   <p style="margin-top:0.4rem;font-size:0.6rem;opacity:0.4">// ALL SIGNALS NOMINAL — NO RTOS REQUIRED</p>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 /* ═══════════════════════════════════════════
    Custom Cursor
 ═══════════════════════════════════════════ */
@@ -1101,4 +1101,16 @@ const observer = new IntersectionObserver((entries) => {
       });
     }
   });
-}, { th
+}, { threshold: 0.1 });
+
+reveals.forEach(el => observer.observe(el));
+
+/* Also trigger for any skill bars already in view */
+document.querySelectorAll('.skill-bar-fill').forEach(bar => {
+  if (bar.closest('.reveal.visible')) {
+    bar.style.width = bar.dataset.w + '%';
+  }
+});
+</script>
+</body>
+</html>
